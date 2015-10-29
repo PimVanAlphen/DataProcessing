@@ -6,6 +6,7 @@ This script scrapes IMDB and outputs a CSV file with highest ranking tv series.
 '''
 # IF YOU WANT TO TEST YOUR ATTEMPT, RUN THE test-tvscraper.py SCRIPT.
 import csv
+import csv, codecs, cStringIO
 
 from pattern.web import URL, DOM
 
@@ -32,17 +33,21 @@ def extract_tvseries(dom):
     # UNICODE CHARACTERS AND SIMPLY LEAVE THEM OUT OF THE OUTPUT.
     extractedTvseries = []
     for a in dom.by_tag("table.results"):
-        for b in a.by_tag("tr")[1:]: # Top 5 reddit entries.
+        for b in a.by_tag("tr")[1:]:
             for c in b.by_tag("td.title"):
+
                 tvserie = []
+
                 for d in c.by_tag("a"):
                     tvserie.append(d.content)
                     break
+
                 for d in c.by_tag("div.rating rating-list"):
                     tmpRating = d.attrs["id"]
                     tmpRating = tmpRating.split("|")
                     tvserie.append(tmpRating[2])
                     break
+
                 for d in c.by_tag("span.genre"):
                     tmpGenres = ''
                     for e in d.by_tag("a"):
@@ -51,6 +56,7 @@ def extract_tvseries(dom):
                             tmpGenres += ","
                         tmpGenres += tmpGenre
                     tvserie.append(tmpGenres)
+
                 for d in c.by_tag("span.credit"):
                     tmpCredits = ''
                     for e in d.by_tag("a"):
@@ -59,20 +65,54 @@ def extract_tvseries(dom):
                             tmpCredits += ","
                         tmpCredits += tmpCredit
                     tvserie.append(tmpCredits)
+
                 for d in c.by_tag("span.runtime"):
-                    tvserie.append(d.content)
+                    tmpRuntime = d.content
+                    tmpRuntime = tmpRuntime.split()
+                    tvserie.append(tmpRuntime[0])
                     break
                 else:
-                    tvserie.append(unicode('unknown mins.'))
+                    tvserie.append(0)
+
                 extractedTvseries.append(tvserie)
+
     return extractedTvseries
 
+# Unicodewriter is taken from pythons online documentation, see https://docs.python.org/2/library/csv.html
+class UnicodeWriter:
+    """
+    A CSV writer which will write rows to CSV file "f",
+    which is encoded in the given encoding.
+    """
+
+    def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
+        # Redirect output to a queue
+        self.queue = cStringIO.StringIO()
+        self.writer = csv.writer(self.queue, dialect=dialect, **kwds)
+        self.stream = f
+        self.encoder = codecs.getincrementalencoder(encoding)()
+
+    def writerow(self, row):
+        self.writer.writerow([s.encode("utf-8") for s in row])
+        # Fetch UTF-8 output from the queue ...
+        data = self.queue.getvalue()
+        data = data.decode("utf-8")
+        # ... and reencode it into the target encoding
+        data = self.encoder.encode(data)
+        # write to the target stream
+        self.stream.write(data)
+        # empty queue
+        self.queue.truncate(0)
+
+    def writerows(self, rows):
+        for row in rows:
+            self.writerow(row)
 
 def save_csv(f, tvseries):
     '''
     Output a CSV file containing highest ranking TV-series.
     '''
-    writer = csv.writer(f)
+    writer = UnicodeWriter(f)
     writer.writerow(['Title', 'Ranking', 'Genre', 'Actors', 'Runtime'])
     for lists in tvseries:
         writer.writerow([lists[0],lists[1],lists[2],lists[3],lists[4]])
