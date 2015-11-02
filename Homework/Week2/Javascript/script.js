@@ -1,4 +1,6 @@
 // Javascript warm-up exercises
+// Name: Pim van Alphen
+// Student number: 11082887
 //
 // Pro-tip: just like any other programming exercise, tackle each
 // problem in small steps while using a print function to check
