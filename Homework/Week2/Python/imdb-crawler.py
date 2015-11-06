@@ -210,11 +210,21 @@ def scrape_top_250(url):
         IMDB, note that these URLS must be absolute (i.e. include the http
         part, the domain part and the path part).
     '''
+    from pattern.web import abs
+
     movie_urls = []
+    html = url.download(cached=True)
+    dom = DOM(html)
+
+    for a in dom.by_tag("tbody.lister-list"):
+        for b in a.by_tag("td.titleColumn"):
+            for c in b.by_tag("a"):
+                link = c.attrs.get("href","")
+                link = abs(link, base=url.redirect or url.string)
+                movie_urls.append(link)
+
     # YOUR SCRAPING CODE GOES HERE, ALL YOU ARE LOOKING FOR ARE THE ABSOLUTE
     # URLS TO EACH MOVIE'S IMDB PAGE, ADD THOSE TO THE LIST movie_urls.
-
-
 
     # return the list of URLs of each movie's page on IMDB
     return movie_urls
@@ -236,7 +246,48 @@ def scrape_movie_page(dom):
         of ratings.
     '''
     # YOUR SCRAPING CODE GOES HERE:
+    for info in dom.by_tag("div.article title-overview"):
+        for title in info.by_tag("span.itemprop")[:1]:
+            title = title.content
 
+        for duration in info.by_tag("time"):
+            duration = duration.content.split(" ")[-2]
+
+        for infos in info.by_tag("div.infobar"):
+            genres = ""
+            for genre in infos.by_tag("span.itemprop")[:2]:
+                if genres != '':
+                    genres += ";"
+                genres += genre.content
+
+        for txt in info.by_tag("div.txt-block")[:1]:
+            directors = ""
+            for director in txt.by_tag("span"):
+                if directors != '':
+                    directors += ";"
+                directors += director.content
+
+        for txt in info.by_tag("div.txt-block")[1:2]:
+            writers = ""
+            for writer in txt.by_tag("span"):
+                 if writers != '':
+                     writers += ";"
+                 writers += writer.content
+
+        for txt in info.by_tag("div.txt-block")[2:3]:
+            actors = ""
+            for actor in txt.by_tag("span")[:-2]:
+                 if actors != '':
+                     actors += ";"
+                 actors += actor.content
+
+        for rating in info.by_tag("div.titlePageSprite star-box-giga-star"):
+            rating = rating.content
+
+        for details in info.by_tag("div.star-box-details"):
+            for n_rating in details.by_tag("a")[:1]:
+                n_ratings = n_rating.attrs["title"]
+                n_ratings = n_ratings.split(' ')[0]
 
     # Return everything of interest for this movie (all strings as specified
     # in the docstring of this function).
