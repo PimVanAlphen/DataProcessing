@@ -1,0 +1,20 @@
+Why is it useful to encapsulate JavaScript code in a module as described in chapter 10
+of Eloquent JavaScript?
+  by wrapping up your javascript code in a module you keep your code from messing with
+  global variables when not needed, and you gain some namespace (because the variables
+  are generated locally).
+
+
+Describe what asynchronous programming is and how it differs from the style of
+programming you used in C and Python.
+  Asynchronous programming means that the program runs apart from the server. Javascript
+  runs on the browser and it doesnt need constant feedback from the server to keep running.
+  This makes it possible to change the webpage without reloading it.
+
+
+Is JSON valid JavaScript? Describe the differences between JavaScript and JSON.
+  JSON is not the same as javascript. Javascript is a script, an actual program which
+  is able to "do" things with the webpage. JSON stands for JavaScript Object Notation
+  and is just a way to write down objects as strings, derived from javascript, but every
+  language is able to transcribe JSON to objects (if such a structure exists in the
+  language).
