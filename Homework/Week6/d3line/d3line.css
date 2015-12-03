@@ -1,0 +1,23 @@
+body {
+  font: 10px sans-serif;
+}
+
+.label {
+  font: 20px sans-serif;
+}
+
+.source {
+  font: 15px sans-serif;
+}
+
+.axis {
+  fill: none;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
