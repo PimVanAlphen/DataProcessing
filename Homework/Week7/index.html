@@ -1,0 +1,41 @@
+<!-- How to run this html with working d3. open CMD, and change directory to the directory the HTML is in. Then run: python -m SimpleHTTPServer [port]. -->
+<!-- Then open your browser and visit: http://your_ip_address:port. the IP adress is the standard IPv4 gateway. -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SVG Map</title>
+    <link rel="stylesheet" type="text/css" href="d3.css"/>
+    <script type="text/javascript" src="d3/d3.js"></script>
+  </head>
+  <body>
+    <h2> Map of Europe </h2>
+    <h5> by Pim van Alphen, 11082887 </br>
+      interaction: hovering over the map shows you the name of the country
+      and the population. If the country hovered above is an european country,
+      its bar in the barchart below turns red. You can click on the bars to
+      remove them from the barchart.
+    </h5>
+    <div id="container1" style="height: 500px; width: 960px"></div>
+
+    <!-- Datamaps Source -->
+    <script src="http://datamaps.github.com/scripts/datamaps-all.js"></script>
+
+    <script type="text/javascript" src="datamap.js"></script>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-36315921-1']);
+      _gaq.push(['_setDomainName', 'bl.ocks.org']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </body>
+</html>
